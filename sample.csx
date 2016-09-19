@@ -5,26 +5,22 @@ using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.SourceGenerator;
 using Microsoft.CodeAnalysis.Editing;
 
 Console.WriteLine("Enter a number");
-var x  =  Console.Read();
+var x  =  Convert.ToInt32(Console.ReadLine());
 Program p = new Program();
-Console.WriteLine("The Value is", Program.GetValue(x));
+Console.WriteLine("The Value is {0}", Program.GetValue(x));
 
 public class Program
     {
         public static string data { get; set; }
 		
-        public IEnumerable<string> GetValue(int id)
+        public static int GetValue(int id)
     {
             var currentNamespace = System.Reflection.Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace;
             IList<string> classNames = new List<string>();
             var list = Directory.EnumerateFiles(Path.GetDirectoryName(@"D:\Roslyn\Roslyn Latest\RoslynCodeGen\ConsoleApp3\src\ConsoleApp3\Entities\")).Where(x => Path.GetExtension(x) == ".cs");
-            var currentNamespace = System.Reflection.Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace;
-            IList<string> classNames = new List<string>();
-            var list = Directory.EnumerateFiles(Path.GetDirectoryName(@"C:\Users\user\Desktop\RoslynCodeGen\ConsoleApp3\src\ConsoleApp3\Entities\")).Where(x => Path.GetExtension(x) == ".cs");
             var text = list.Select(x => CSharpSyntaxTree.ParseText(File.ReadAllText(x))).Cast<CSharpSyntaxTree>();
             foreach (CSharpSyntaxTree syntaxTree in text)
             {
@@ -37,7 +33,7 @@ public class Program
             }
             CreateInterface(classNames, currentNamespace);
             CreateClass(classNames, currentNamespace);
-            return list;
+            return id;
     }
 
         public static void CreateInterface(IList<string> classNames, string currentNamespace)
@@ -59,7 +55,7 @@ public class Program
                 var newNode = generator.CompilationUnit(usingSystemDirectives/*, usingSystemGenricDirectives, usingEntities*/, namespaceDeclaration).
                               NormalizeWhitespace();
                 data = newNode.ToString();
-                var path = Path.GetFullPath(@"C:\Users\user\Desktop\Scriptcs\Generated");
+                var path = Path.GetFullPath(@"D:\Roslyn\Scriptcs\Generated");
                 var logPath = Path.GetFullPath("Generated\\" + "I" + className + "Repository" + ".cs");
                 if (!Directory.Exists(path))
                 {
@@ -102,7 +98,7 @@ public class Program
                               NormalizeWhitespace();
                 data = newNode.ToString();
                 var targetFolder = @"D:\Roslyn\Scriptcs\";
-                var path = Path.GetFullPath(targetFolder + @"Generated/");
+                var path = Path.GetFullPath(targetFolder + @"Generated");
                 var logPath = Path.GetFullPath(path + "\\" + className + "Repository" + ".cs");
                 if (!Directory.Exists(path))
                 {
